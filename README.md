@@ -7,9 +7,6 @@ Medical files management, booking and discounts within the application, and book
 #### UI
 - [Figma- UI](https://www.figma.com/proto/jGwEgd4VjPKUXFRTconDRh/%D8%AA%D8%B7%D8%A8%D9%8A%D9%82-%D8%B7%D8%A8%D9%89-CP-50-i17?node-id=717-45790&p=f&t=pdHQy6p8pIhFqcth-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=10%3A4648)
 
-#### API Postman
-- [Postman](https://api.postman.com/collections/50716080-9cd08117-8e0d-4510-88f7-1c10bc0b7b7c?access_key=PMAT-01KNHAEXZ71FC1N77T7Y139MS4)
-
 #### ERD:
 ![erd](public/images/medical_app_erd.jpg)
 
