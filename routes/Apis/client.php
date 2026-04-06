@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\Client\AuthController;
 
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
 
-Route::post('/login', [AuthController::class,'login']);
-Route::middleware('auth:client')->get('/me', fn()=>auth()->user());
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('change-password', [AuthController::class, 'changePassword']);
+});
