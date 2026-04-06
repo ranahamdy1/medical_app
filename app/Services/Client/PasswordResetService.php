@@ -10,15 +10,15 @@ use Illuminate\Support\Str;
 
 class PasswordResetService
 {
-    public function sendResetLink(string $email)
+    public function sendResetLink(string $email): array
     {
         $user = User::where('email', $email)->first();
 
         if (!$user) {
             return [
-                'status' => false,
+                'status'  => false,
                 'message' => 'User not found.',
-                'code' => 404
+                'code'    => 404,
             ];
         }
 
@@ -27,8 +27,8 @@ class PasswordResetService
         DB::table('password_resets')->updateOrInsert(
             ['email' => $user->email],
             [
-                'email' => $user->email,
-                'token' => $token,
+                'email'      => $user->email,
+                'token'      => $token,
                 'created_at' => now(),
             ]
         );
@@ -39,12 +39,12 @@ class PasswordResetService
         });
 
         return [
-            'status' => true,
-            'message' => 'Password reset code sent successfully.'
+            'status'  => true,
+            'message' => 'Password reset code sent successfully.',
         ];
     }
 
-    public function verifyToken(string $token)
+    public function verifyToken(string $token): array
     {
         $passwordReset = DB::table('password_resets')
             ->where('token', $token)
@@ -52,21 +52,21 @@ class PasswordResetService
 
         if (!$passwordReset) {
             return [
-                'status' => false,
+                'status'  => false,
                 'message' => 'Invalid or expired token.',
-                'code' => 400
+                'code'    => 400,
             ];
         }
 
         return [
             'status' => true,
-            'data' => [
-                'email' => $passwordReset->email
-            ]
+            'data'   => [
+                'email' => $passwordReset->email,
+            ],
         ];
     }
 
-    public function reset(array $data)
+    public function reset(array $data): array
     {
         $passwordReset = DB::table('password_resets')
             ->where('token', $data['token'])
@@ -74,9 +74,9 @@ class PasswordResetService
 
         if (!$passwordReset) {
             return [
-                'status' => false,
+                'status'  => false,
                 'message' => 'Invalid or expired code.',
-                'code' => 400
+                'code'    => 400,
             ];
         }
 
@@ -84,9 +84,9 @@ class PasswordResetService
 
         if (!$user) {
             return [
-                'status' => false,
+                'status'  => false,
                 'message' => 'User not found.',
-                'code' => 404
+                'code'    => 404,
             ];
         }
 
@@ -101,8 +101,8 @@ class PasswordResetService
             ->delete();
 
         return [
-            'status' => true,
-            'message' => 'Password reset successfully.'
+            'status'  => true,
+            'message' => 'Password reset successfully.',
         ];
     }
 }

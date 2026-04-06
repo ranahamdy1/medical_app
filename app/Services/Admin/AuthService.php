@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin;
 
+use App\Http\Resources\Admin\AdminResource;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,28 +16,25 @@ class AuthService
             return [
                 'status' => false,
                 'message' => 'Invalid credentials',
-                'code' => 401
+                'code' => 401,
             ];
         }
 
-        // إنشاء token جديد
         $token = $admin->createToken('Admin Token')->plainTextToken;
 
         return [
-            'status' => true,
+            'status'  => true,
             'message' => 'Login successful',
-            'data' => [
-                'admin' => $admin,
-                'token' => $token
-            ]
+            'data'    => [
+                'admin' => new AdminResource($admin),
+                'token' => $token,
+            ],
         ];
     }
 
     public function logout($admin)
     {
-        // حذف التوكن الحالي فقط
         $admin->currentAccessToken()->delete();
-
         return true;
     }
 }

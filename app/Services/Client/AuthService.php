@@ -2,6 +2,7 @@
 
 namespace App\Services\Client;
 
+use App\Http\Resources\Client\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +20,7 @@ class AuthService
         $token = $user->createToken('API Token')->plainTextToken;
 
         return [
-            'user'  => $user,
+            'user'  => new UserResource($user),
             'token' => $token,
         ];
     }
@@ -28,21 +29,21 @@ class AuthService
     {
         if (!Auth::attempt($credentials)) {
             return [
-                'status' => false,
+                'status'  => false,
                 'message' => 'Invalid credentials',
-                'code' => 401
+                'code'    => 401,
             ];
         }
 
-        $user = Auth::user();
+        $user  = Auth::user();
         $token = $user->createToken('API Token')->plainTextToken;
 
         return [
             'status' => true,
-            'data' => [
-                'user'  => $user,
+            'data'   => [
+                'user'  => new UserResource($user),
                 'token' => $token,
-            ]
+            ],
         ];
     }
 
@@ -55,9 +56,9 @@ class AuthService
     {
         if (!Hash::check($data['current_password'], $user->password)) {
             return [
-                'status' => false,
+                'status'  => false,
                 'message' => 'Current password is incorrect',
-                'code' => 400
+                'code'    => 400,
             ];
         }
 
@@ -66,8 +67,8 @@ class AuthService
         ]);
 
         return [
-            'status' => true,
-            'message' => 'Password updated successfully'
+            'status'  => true,
+            'message' => 'Password updated successfully',
         ];
     }
 }

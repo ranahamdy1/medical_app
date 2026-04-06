@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\ResetPasswordRequest;
 use App\Http\Requests\Client\SendResetLinkRequest;
 use App\Services\Client\PasswordResetService;
-use Illuminate\Http\Request;
 
 class PasswordResetController extends Controller
 {
@@ -21,38 +20,35 @@ class PasswordResetController extends Controller
     {
         $result = $this->service->sendResetLink($request->email);
 
-        if (!$result['status']) {
-            return api_response('fail', $result['message'], null, $result['code']);
-        }
-
-        return api_response('success', $result['message']);
+        return api_response(
+            $result['status'] ? 'success' : 'fail',
+            $result['message'],
+            $result['data'] ?? null,
+            $result['code'] ?? 200
+        );
     }
 
-    public function verifyToken(Request $request)
+    public function verifyToken(ResetPasswordRequest $request)
     {
-        $request->validate(['token' => 'required']);
-
         $result = $this->service->verifyToken($request->token);
 
-        if (!$result['status']) {
-            return api_response('fail', $result['message'], null, $result['code']);
-        }
-
         return api_response(
-            'success',
-            'Token is valid.',
-            $result['data']
+            $result['status'] ? 'success' : 'fail',
+            $result['message'] ?? 'Token verification',
+            $result['data'] ?? null,
+            $result['code'] ?? 200
         );
     }
 
     public function reset(ResetPasswordRequest $request)
     {
-        $result = $this->service->reset($request->validated());
+        $result = $this->service->reset($request->only(['token', 'password']));
 
-        if (!$result['status']) {
-            return api_response('fail', $result['message'], null, $result['code']);
-        }
-
-        return api_response('success', $result['message']);
+        return api_response(
+            $result['status'] ? 'success' : 'fail',
+            $result['message'],
+            $result['data'] ?? null,
+            $result['code'] ?? 200
+        );
     }
 }
