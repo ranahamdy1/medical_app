@@ -2,13 +2,16 @@
 
 namespace App\Services\Admin;
 
-use Illuminate\Support\Facades\Auth;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
     public function login(array $credentials)
     {
-        if (!Auth::guard('admin')->attempt($credentials)) {
+        $admin = Admin::where('email', $credentials['email'])->first();
+
+        if (!$admin || !Hash::check($credentials['password'], $admin->password)) {
             return [
                 'status' => false,
                 'message' => 'Invalid credentials',
@@ -16,21 +19,23 @@ class AuthService
             ];
         }
 
+        // إنشاء token جديد
+        $token = $admin->createToken('Admin Token')->plainTextToken;
+
         return [
             'status' => true,
             'message' => 'Login successful',
-            'data' => Auth::guard('admin')->user()
+            'data' => [
+                'admin' => $admin,
+                'token' => $token
+            ]
         ];
     }
 
-    public function me()
+    public function logout($admin)
     {
-        return Auth::guard('admin')->user();
-    }
-
-    public function logout()
-    {
-        Auth::guard('admin')->logout();
+        // حذف التوكن الحالي فقط
+        $admin->currentAccessToken()->delete();
 
         return true;
     }

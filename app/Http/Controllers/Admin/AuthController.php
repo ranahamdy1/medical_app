@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LoginRequest;
 use App\Services\Admin\AuthService;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -35,18 +36,9 @@ class AuthController extends Controller
         );
     }
 
-    public function me()
+    public function logout(Request $request)
     {
-        return api_response(
-            'success',
-            'Admin profile',
-            $this->authService->me()
-        );
-    }
-
-    public function logout()
-    {
-        $this->authService->logout();
+        $this->authService->logout($request->user('admin'));
 
         return api_response(
             'success',
