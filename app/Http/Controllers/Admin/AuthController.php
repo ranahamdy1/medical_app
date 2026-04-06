@@ -3,28 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Admin\LoginRequest;
+use App\Services\Admin\AuthService;
 
 class AuthController extends Controller
 {
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function login(LoginRequest $request)
     {
-        $credentials = $request->validated();
+        $result = $this->authService->login($request->validated());
 
-        if (!Auth::guard('admin')->attempt($credentials)) {
+        if (!$result['status']) {
             return api_response(
                 'fail',
-                'Invalid credentials',
+                $result['message'],
                 null,
-                401
+                $result['code']
             );
         }
 
         return api_response(
             'success',
-            'Login successful',
-            Auth::guard('admin')->user()
+            $result['message'],
+            $result['data']
         );
     }
 
@@ -33,13 +40,13 @@ class AuthController extends Controller
         return api_response(
             'success',
             'Admin profile',
-            Auth::guard('admin')->user()
+            $this->authService->me()
         );
     }
 
     public function logout()
     {
-        Auth::guard('admin')->logout();
+        $this->authService->logout();
 
         return api_response(
             'success',

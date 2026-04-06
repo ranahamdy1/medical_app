@@ -6,57 +6,53 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\ChangePasswordRequest;
 use App\Http\Requests\Client\LoginRequest;
 use App\Http\Requests\Client\RegisterRequest;
-use App\Models\User;
+use App\Services\Client\AuthService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function register(RegisterRequest $request)
     {
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $token = $user->createToken('API Token')->plainTextToken;
+        $data = $this->authService->register($request->validated());
 
         return api_response(
             'success',
             'User registered successfully',
-            [
-                'user'  => $user,
-                'token' => $token,
-            ],
+            $data,
             201
         );
     }
 
     public function login(LoginRequest $request)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return api_response('fail', 'Invalid credentials', null, 401);
+        $result = $this->authService->login($request->validated());
+
+        if (!$result['status']) {
+            return api_response(
+                'fail',
+                $result['message'],
+                null,
+                $result['code']
+            );
         }
-
-        $user = Auth::user();
-
-        $token = $user->createToken('API Token')->plainTextToken;
 
         return api_response(
             'success',
             'Login successful',
-            [
-                'user'  => $user,
-                'token' => $token,
-            ]
+            $result['data']
         );
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $this->authService->logout($request->user());
 
         return api_response(
             'success',
@@ -66,20 +62,23 @@ class AuthController extends Controller
 
     public function changePassword(ChangePasswordRequest $request)
     {
-        $user = $request->user();
+        $result = $this->authService->changePassword(
+            $request->user(),
+            $request->validated()
+        );
 
-        if (!Hash::check($request->current_password, $user->password)) {
-            return api_response('fail', 'Current password is incorrect', null, 400);
+        if (!$result['status']) {
+            return api_response(
+                'fail',
+                $result['message'],
+                null,
+                $result['code']
+            );
         }
-
-        $user->update([
-            'password' => Hash::make($request->new_password),
-        ]);
 
         return api_response(
             'success',
-            'Password updated successfully'
+            $result['message']
         );
     }
-
 }
