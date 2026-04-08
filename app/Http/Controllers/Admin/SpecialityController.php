@@ -19,8 +19,15 @@ class SpecialityController extends Controller
 
     public function index()
     {
-        return SpecialityResource::collection(
+        $specialities = SpecialityResource::collection(
             $this->service->getAll()
+        );
+
+        return api_response(
+            'success',
+            'Specialities retrieved successfully',
+            $specialities,
+            200
         );
     }
 
@@ -28,13 +35,23 @@ class SpecialityController extends Controller
     {
         $speciality = $this->service->store($request);
 
-        return new SpecialityResource($speciality);
+        return api_response(
+            'success',
+            'Speciality created successfully',
+            new SpecialityResource($speciality),
+            201
+        );
     }
 
     public function show($id)
     {
-        return new SpecialityResource(
-            $this->service->show($id)
+        $speciality = $this->service->show($id);
+
+        return api_response(
+            'success',
+            'Speciality retrieved successfully',
+            new SpecialityResource($speciality),
+            200
         );
     }
 
@@ -42,13 +59,23 @@ class SpecialityController extends Controller
     {
         $speciality = $this->service->update($request, $id);
 
-        return new SpecialityResource($speciality);
+        return api_response(
+            'success',
+            'Speciality updated successfully',
+            new SpecialityResource($speciality),
+            200
+        );
     }
 
     public function destroy($id)
     {
         $this->service->delete($id);
 
-        return response()->json(['message' => 'Deleted']);
+        return api_response(
+            'success',
+            'Speciality deleted successfully',
+            null,
+            200
+        );
     }
 }

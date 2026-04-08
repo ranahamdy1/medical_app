@@ -16,12 +16,12 @@ return new class extends Migration
             $table->unsignedBigInteger('doctor_id');
             //$table->string('image');
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->decimal('price');
-            $table->integer('number');
-            $table->datetime('duration');
-            $table->decimal('price_before');
-            $table->decimal('price_after');
+            $table->integer('number')->nullable();
+            $table->datetime('duration')->nullable();
+            $table->decimal('price_before', 8, 2)->nullable();
+            $table->decimal('price_after', 8, 2)->nullable();
             $table->integer('discount_percentage');
             $table->timestamps();
         });
