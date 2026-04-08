@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Client\AuthController;
+use App\Http\Controllers\Client\DoctorController;
 use App\Http\Controllers\Client\PasswordResetController;
 use App\Http\Controllers\Client\SpecialityController;
 
@@ -16,10 +17,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('change-password', [AuthController::class, 'changePassword']);
 
     Route::get('specialities', [SpecialityController::class, 'index']);
-//    Route::get('doctors', [DoctorController::class, 'index']);
-//    Route::get('doctors/{id}', [DoctorController::class, 'show']);
-//    Route::apiResource('appointments', AppointmentController::class);
-//    Route::apiResource('favourites', FavouriteController::class);
-//    Route::apiResource('ratings', RatingController::class);
-//    Route::get('offers', [OfferController::class, 'index']);
+
+    Route::get('/doctors/search', [DoctorController::class, 'search']);
+    Route::get('/doctors/speciality/{specialityId}', [DoctorController::class, 'bySpeciality']);
+    Route::get('/doctors/{id}', [DoctorController::class, 'show']);
+    Route::get('/doctors', [DoctorController::class, 'index']);
+
 });
