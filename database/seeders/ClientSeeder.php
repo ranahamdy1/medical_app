@@ -3,18 +3,20 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Client;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class ClientSeeder extends Seeder
 {
     public function run(): void
     {
-        Client::updateOrCreate(
-            ['email' => 'client@example.com'], // unique key
+        User::updateOrCreate(
+            ['email' => 'client@example.com'],
             [
-                'name' => 'Test Client',
+                'name'     => 'Test Client',
                 'password' => Hash::make('123456'),
+                'phone'    => '01000000000',
+                'role_id'  => 2,
             ]
         );
     }
