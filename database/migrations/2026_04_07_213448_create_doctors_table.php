@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('year_of_exp');
             $table->boolean('is_favourite');
             $table->text('about_doctor');
-            $table->string('certificate_image');
+            //$table->string('certificate_image');
             $table->timestamps();
         });
     }

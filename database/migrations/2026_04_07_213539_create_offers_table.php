@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('doctor_id');
-            $table->string('image');
+            //$table->string('image');
             $table->string('title');
             $table->text('description');
             $table->decimal('price');

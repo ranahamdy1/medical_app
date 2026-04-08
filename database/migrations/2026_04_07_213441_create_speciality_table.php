@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('specialities', function (Blueprint $table) {
             $table->id();
-            $table->string('image');
+            //$table->string('image');
             $table->string('title');
             $table->integer('num_of_available_doctor');
             $table->integer('parent_id')->nullable();
