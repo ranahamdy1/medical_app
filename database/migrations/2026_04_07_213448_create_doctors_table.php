@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('speciality_id');
             $table->string('gender');
             $table->decimal('price');
-            $table->datetime('duration');
+            $table->integer('duration');
             $table->integer('evaluation');
             $table->integer('year_of_exp');
             $table->boolean('is_favourite');

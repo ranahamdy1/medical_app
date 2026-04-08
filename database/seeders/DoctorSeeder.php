@@ -29,7 +29,7 @@ class DoctorSeeder extends Seeder
                 'speciality_id'    => 1,
                 'gender'           => 'male',
                 'price'            => 200,
-                'duration'         => now()->addMinutes(30),
+                'duration'         => 30,
                 'evaluation'       => 5,
                 'year_of_exp'      => 10,
                 'is_favourite'     => false,
