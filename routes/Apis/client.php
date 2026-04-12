@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Client\AppointmentController;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\DoctorController;
 use App\Http\Controllers\Client\FavouriteController;
@@ -28,5 +29,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('favourites', FavouriteController::class);
     Route::apiResource('ratings', RatingController::class);
     Route::get('offers', [OfferController::class, 'index']);
-    //    Route::apiResource('appointments', AppointmentController::class);
+    Route::apiResource('appointments', AppointmentController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 });

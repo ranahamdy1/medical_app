@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\SpecialityController;
@@ -16,4 +17,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('doctors', DoctorController::class);
     Route::apiResource('offers', OfferController::class);
     Route::apiResource('users', UserController::class);
+    Route::apiResource('appointments', AppointmentController::class);
 });
