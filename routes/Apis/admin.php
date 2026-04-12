@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\SpecialityController;
 use App\Http\Controllers\Admin\UserController;
@@ -18,4 +19,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('offers', OfferController::class);
     Route::apiResource('users', UserController::class);
     Route::apiResource('appointments', AppointmentController::class);
+
+    Route::post('/notifications', [NotificationController::class, 'store']);
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
+
 });

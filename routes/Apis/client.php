@@ -4,6 +4,7 @@ use App\Http\Controllers\Client\AppointmentController;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\DoctorController;
 use App\Http\Controllers\Client\FavouriteController;
+use App\Http\Controllers\Client\NotificationController;
 use App\Http\Controllers\Client\OfferController;
 use App\Http\Controllers\Client\PasswordResetController;
 use App\Http\Controllers\Client\RatingController;
@@ -30,4 +31,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('ratings', RatingController::class);
     Route::get('offers', [OfferController::class, 'index']);
     Route::apiResource('appointments', AppointmentController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
 });
