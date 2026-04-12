@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\DoctorController;
+use App\Http\Controllers\Client\FavouriteController;
 use App\Http\Controllers\Client\PasswordResetController;
 use App\Http\Controllers\Client\SpecialityController;
 
@@ -22,5 +23,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/doctors/speciality/{specialityId}', [DoctorController::class, 'bySpeciality']);
     Route::get('/doctors/{id}', [DoctorController::class, 'show']);
     Route::get('/doctors', [DoctorController::class, 'index']);
-
+    Route::apiResource('favourites', FavouriteController::class);
+//    Route::apiResource('appointments', AppointmentController::class);
+//    Route::apiResource('ratings', RatingController::class);
+//    Route::get('offers', [OfferController::class, 'index']);
 });
