@@ -4,8 +4,8 @@ namespace App\Services\Client;
 
 use App\Http\Resources\Client\UserResource;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
@@ -15,10 +15,10 @@ class AuthService
             'name'     => $data['name'],
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
-            'role_id' => 2
+            'role_id'  => 2,
         ]);
 
-        $token = $user->createToken('API Token')->plainTextToken;
+        $token = JWTAuth::fromUser($user);
 
         return [
             'user'  => new UserResource($user),
@@ -28,7 +28,9 @@ class AuthService
 
     public function login(array $credentials)
     {
-        if (!Auth::attempt($credentials)) {
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return [
                 'status'  => false,
                 'message' => 'Invalid credentials',
@@ -36,8 +38,7 @@ class AuthService
             ];
         }
 
-        $user  = Auth::user();
-        $token = $user->createToken('API Token')->plainTextToken;
+        $token = JWTAuth::fromUser($user);
 
         return [
             'status' => true,
@@ -48,9 +49,9 @@ class AuthService
         ];
     }
 
-    public function logout($user)
+    public function logout($token)
     {
-        $user->currentAccessToken()->delete();
+        JWTAuth::setToken($token)->invalidate();
     }
 
     public function changePassword($user, array $data)

@@ -3,13 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Admin extends Authenticatable
+class Admin extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, Notifiable;
-
     protected $fillable = [
         'name',
         'email',
@@ -20,4 +17,15 @@ class Admin extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    // JWT REQUIRED
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

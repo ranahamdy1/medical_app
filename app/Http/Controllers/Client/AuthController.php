@@ -46,13 +46,16 @@ class AuthController extends Controller
         return api_response(
             'success',
             'Login successful',
-            $result['data']
+            [
+                'user'  => $result['data']['user'],
+                'token' => $result['data']['token']
+            ]
         );
     }
 
     public function logout(Request $request)
     {
-        $this->authService->logout($request->user());
+        $this->authService->logout($request->bearerToken());
 
         return api_response(
             'success',
@@ -62,8 +65,10 @@ class AuthController extends Controller
 
     public function changePassword(ChangePasswordRequest $request)
     {
+        $user = auth('client')->user();
+
         $result = $this->authService->changePassword(
-            $request->user(),
+            $user,
             $request->validated()
         );
 

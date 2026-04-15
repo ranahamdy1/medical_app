@@ -15,11 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
             Route::middleware('api')
                 ->prefix('admin')
-                ->group(__DIR__.'/../routes/Apis/admin.php');
+                ->group(base_path('routes/Apis/admin.php'));
 
             Route::middleware('api')
                 ->prefix('client')
-                ->group(__DIR__.'/../routes/Apis/client.php');
+                ->group(base_path('routes/Apis/client.php'));
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {

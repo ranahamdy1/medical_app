@@ -18,23 +18,23 @@ class PasswordResetController extends Controller
 
     public function sendResetLink(SendResetLinkRequest $request)
     {
-        $result = $this->service->sendResetLink($request->email);
+        $result = $this->service->sendResetLink($request->validated('email'));
 
         return api_response(
             $result['status'] ? 'success' : 'fail',
             $result['message'],
-            $result['data'] ?? null,
+            null,
             $result['code'] ?? 200
         );
     }
 
     public function verifyToken(ResetPasswordRequest $request)
     {
-        $result = $this->service->verifyToken($request->token);
+        $result = $this->service->verifyToken($request->validated('token'));
 
         return api_response(
             $result['status'] ? 'success' : 'fail',
-            $result['message'] ?? 'Token verification',
+            $result['message'],
             $result['data'] ?? null,
             $result['code'] ?? 200
         );
@@ -42,12 +42,12 @@ class PasswordResetController extends Controller
 
     public function reset(ResetPasswordRequest $request)
     {
-        $result = $this->service->reset($request->only(['token', 'password']));
+        $result = $this->service->reset($request->validated());
 
         return api_response(
             $result['status'] ? 'success' : 'fail',
             $result['message'],
-            $result['data'] ?? null,
+            null,
             $result['code'] ?? 200
         );
     }

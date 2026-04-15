@@ -5,6 +5,7 @@ namespace App\Services\Admin;
 use App\Http\Resources\Admin\AdminResource;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
@@ -20,7 +21,7 @@ class AuthService
             ];
         }
 
-        $token = $admin->createToken('Admin Token')->plainTextToken;
+        $token = JWTAuth::fromUser($admin);
 
         return [
             'status'  => true,
@@ -32,9 +33,13 @@ class AuthService
         ];
     }
 
-    public function logout($admin)
+    public function logout($token)
     {
-        $admin->currentAccessToken()->delete();
-        return true;
+        try {
+            JWTAuth::setToken($token)->invalidate();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

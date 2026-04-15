@@ -1,17 +1,20 @@
 <?php
 
-use App\Http\Controllers\Admin\AppointmentController;
-use App\Http\Controllers\Admin\DoctorController;
-use App\Http\Controllers\Admin\NotificationController;
-use App\Http\Controllers\Admin\OfferController;
-use App\Http\Controllers\Admin\SpecialityController;
-use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\{
+    AppointmentController,
+    DoctorController,
+    NotificationController,
+    OfferController,
+    SpecialityController,
+    UserController,
+    AuthController
+};
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:admin')->group(function () {
+
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::apiResource('specialities', SpecialityController::class);
@@ -22,5 +25,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/notifications', [NotificationController::class, 'store']);
     Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
-
 });

@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class PasswordResetService
 {
@@ -22,7 +21,7 @@ class PasswordResetService
             ];
         }
 
-        $token = rand(10000, 99999);
+        $token = rand(100000, 999999); // OTP 6 digits (أفضل من 5)
 
         DB::table('password_resets')->updateOrInsert(
             ['email' => $user->email],
@@ -40,39 +39,15 @@ class PasswordResetService
 
         return [
             'status'  => true,
-            'message' => 'Password reset code sent successfully.',
+            'message' => 'Reset code sent successfully.',
         ];
     }
 
     public function verifyToken(string $token): array
     {
-        $passwordReset = DB::table('password_resets')
-            ->where('token', $token)
-            ->first();
+        $reset = DB::table('password_resets')->where('token', $token)->first();
 
-        if (!$passwordReset) {
-            return [
-                'status'  => false,
-                'message' => 'Invalid or expired token.',
-                'code'    => 400,
-            ];
-        }
-
-        return [
-            'status' => true,
-            'data'   => [
-                'email' => $passwordReset->email,
-            ],
-        ];
-    }
-
-    public function reset(array $data): array
-    {
-        $passwordReset = DB::table('password_resets')
-            ->where('token', $data['token'])
-            ->first();
-
-        if (!$passwordReset) {
+        if (!$reset) {
             return [
                 'status'  => false,
                 'message' => 'Invalid or expired code.',
@@ -80,8 +55,25 @@ class PasswordResetService
             ];
         }
 
-        $user = User::where('email', $passwordReset->email)->first();
+        return [
+            'status' => true,
+            'data'   => [
+                'email' => $reset->email,
+            ],
+        ];
+    }
 
+    public function reset(array $data): array
+    {
+        $reset = DB::table('password_resets')->where('token', $data['token'])->first();
+        if (!$reset) {
+            return [
+                'status'  => false,
+                'message' => 'Invalid or expired code.',
+                'code'    => 400,
+            ];
+        }
+        $user = User::where('email', $reset->email)->first();
         if (!$user) {
             return [
                 'status'  => false,
@@ -89,16 +81,12 @@ class PasswordResetService
                 'code'    => 404,
             ];
         }
-
-        $user->forceFill([
+        $user->update([
             'password' => Hash::make($data['password']),
-        ])->setRememberToken(Str::random(60));
+        ]);
 
-        $user->save();
-
-        DB::table('password_resets')
-            ->where('email', $passwordReset->email)
-            ->delete();
+        // delete used token
+        DB::table('password_resets')->where('email', $reset->email)->delete();
 
         return [
             'status'  => true,
