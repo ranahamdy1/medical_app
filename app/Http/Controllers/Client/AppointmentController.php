@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Client\CreateAppointmentRequest;
+use App\Http\Requests\Client\UpdateAppointmentRequest;
 use App\Http\Resources\Admin\AppointmentResource;
 use App\Services\Admin\AppointmentService;
-use Illuminate\Http\Request;
 use App\Models\Doctor;
 
 class AppointmentController extends Controller
@@ -26,23 +27,14 @@ class AppointmentController extends Controller
         );
     }
 
-    public function store(Request $request)
+    public function store(CreateAppointmentRequest $request)
     {
-        $request->validate([
-            'doctor_id' => 'required|exists:doctors,id',
-            'date' => 'required|date',
-            'time' => 'required',
-        ]);
-
-        // 👇 get doctor price (IMPORTANT FIX)
         $doctor = Doctor::findOrFail($request->doctor_id);
 
         $appointment = $this->service->store([
             'user_id' => auth()->id(),
             'doctor_id' => $request->doctor_id,
-
-            'price' => $doctor->price, // ✅ FIX: prevent NULL price
-
+            'price' => $doctor->price,
             'date' => $request->date,
             'time' => $request->time,
         ]);
@@ -67,12 +59,12 @@ class AppointmentController extends Controller
         );
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateAppointmentRequest $request, $id)
     {
         $appointment = $this->service->updateForUser(
             $id,
             auth()->id(),
-            $request->all()
+            $request->validated()
         );
 
         return api_response(
