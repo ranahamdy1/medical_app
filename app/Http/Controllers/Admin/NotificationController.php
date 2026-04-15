@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\NotificationRequest;
+use App\Http\Resources\Admin\NotificationResource;
 use App\Services\Admin\NotificationService;
 use Illuminate\Http\Request;
 
@@ -10,21 +12,16 @@ class NotificationController extends Controller
 {
     public function __construct(private NotificationService $service) {}
 
-    public function store(Request $request)
+    public function store(NotificationRequest $request)
     {
-        $notification = $this->service->create([
-            'user_id' => $request->user_id,
-            'title' => $request->title,
-            'description' => $request->description,
-            'image' => $request->image,
-            'notifiable_type' => $request->notifiable_type,
-            'notifiable_id' => $request->notifiable_id,
-        ]);
+        $data = $request->validated();
+
+        $notification = $this->service->create($data);
 
         return api_response(
             'success',
             'Notification created successfully',
-            $notification,
+            new NotificationResource($notification),
             201
         );
     }

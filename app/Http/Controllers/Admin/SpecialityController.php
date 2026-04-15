@@ -41,6 +41,7 @@ class SpecialityController extends Controller
             new SpecialityResource($speciality),
             201
         );
+        //return  $this->service->store($request);
     }
 
     public function show($id)
