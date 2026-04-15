@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('payment_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->decimal('price');
-            $table->string('payment_method');
-            $table->string('statues');
-            $table->string('payment_details');
+            $table->decimal('price', 10, 2);
+            $table->string('payment_method')->nullable();
+            $table->string('status')->default('pending');
+            $table->json('payment_details')->nullable();
             $table->foreignId('appointment_id')->constrained('appointments');
+            $table->string('stripe_payment_intent_id')->nullable();
             $table->timestamps();
         });
     }

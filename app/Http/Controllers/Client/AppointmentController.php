@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AppointmentResource;
 use App\Services\Admin\AppointmentService;
 use Illuminate\Http\Request;
+use App\Models\Doctor;
 
 class AppointmentController extends Controller
 {
@@ -27,9 +28,20 @@ class AppointmentController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'doctor_id' => 'required|exists:doctors,id',
+            'date' => 'required|date',
+            'time' => 'required',
+        ]);
+
+        // 👇 get doctor price (IMPORTANT FIX)
+        $doctor = Doctor::findOrFail($request->doctor_id);
+
         $appointment = $this->service->store([
             'user_id' => auth()->id(),
             'doctor_id' => $request->doctor_id,
+
+            'price' => $doctor->price, // ✅ FIX: prevent NULL price
 
             'date' => $request->date,
             'time' => $request->time,

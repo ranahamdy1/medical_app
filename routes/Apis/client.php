@@ -9,6 +9,8 @@ use App\Http\Controllers\Client\OfferController;
 use App\Http\Controllers\Client\PasswordResetController;
 use App\Http\Controllers\Client\RatingController;
 use App\Http\Controllers\Client\SpecialityController;
+use App\Http\Controllers\Client\StripeController;
+use App\Http\Controllers\Client\StripeWebhookController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -33,4 +35,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('appointments', AppointmentController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
+
+    //stripe
+    Route::post('/create-payment-intent', [StripeController::class, 'createPaymentIntent']);
+    Route::post('/confirm-payment', [StripeController::class, 'confirmPayment']);
 });
+
+
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('status')->default('pending');
             $table->date('date');
             $table->time('time');
+            $table->decimal('price', 10, 2)->nullable();
 
             $table->timestamps();
         });
