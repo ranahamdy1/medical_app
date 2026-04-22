@@ -1,19 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Client\{
-    AppointmentController,
+use App\Http\Controllers\Client\{AppointmentController,
     AuthController,
     DoctorController,
     FavouriteController,
     NotificationController,
     OfferController,
     PasswordResetController,
+    ProfileController,
     RatingController,
     SpecialityController,
     StripeController,
-    StripeWebhookController
-};
+    StripeWebhookController};
 
 // Auth
 Route::middleware('guest:client')->group(function () {
@@ -44,6 +43,14 @@ Route::middleware('auth:client')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('change-password', [AuthController::class, 'changePassword']);
 
+    // Profile
+    Route::prefix('profile')->group(function () {
+        Route::get('/show-profile', [ProfileController::class, 'show']);
+        Route::post('/update-profile', [ProfileController::class, 'update']);
+        Route::post('/change-email', [ProfileController::class, 'changeEmail']);
+        Route::post('/change-phone', [ProfileController::class, 'changePhone']);
+    });
+
     // User Features
     Route::apiResource('favourites', FavouriteController::class);
     Route::apiResource('ratings', RatingController::class);
@@ -55,6 +62,7 @@ Route::middleware('auth:client')->group(function () {
     // Payments
     Route::post('/create-payment-intent', [StripeController::class, 'createPaymentIntent']);
     Route::post('/confirm-payment', [StripeController::class, 'confirmPayment']);
+
 });
 
 
