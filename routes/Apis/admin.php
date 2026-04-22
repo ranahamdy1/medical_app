@@ -1,21 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{
-    AppointmentController,
+use App\Http\Controllers\Admin\{AppointmentController,
+    BannerController,
     DoctorController,
     NotificationController,
     OfferController,
     SpecialityController,
     UserController,
-    AuthController
-};
+    AuthController};
 
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:admin')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/banners', [BannerController::class, 'index']);
+    Route::post('/banners', [BannerController::class, 'store']);
+
 
     Route::apiResource('specialities', SpecialityController::class);
     Route::apiResource('doctors', DoctorController::class);
