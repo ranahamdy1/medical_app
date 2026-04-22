@@ -75,3 +75,4 @@ Route::middleware('auth:client')->group(function () {
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 
 Route::get('/about', [AboutController::class, 'index']);
+Route::get('/terms', [SettingsController::class, 'terms']);
