@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\{
     AppointmentController,
     AuthController,
@@ -14,38 +15,47 @@ use App\Http\Controllers\Client\{
     StripeWebhookController
 };
 
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+// Auth
+Route::middleware('guest:client')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('/verify-register', [AuthController::class, 'verifyRegister']);
+    Route::post('login', [AuthController::class, 'login']);
+});
 
+// Password Reset
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink']);
 Route::post('/verifyToken', [PasswordResetController::class, 'verifyToken']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
-Route::middleware('auth:client')->group(function () {
+// Public Data (Guest Access)
+Route::get('specialities', [SpecialityController::class, 'index']);
 
+Route::prefix('doctors')->group(function () {
+    Route::get('/', [DoctorController::class, 'index']);
+    Route::get('/search', [DoctorController::class, 'search']);
+    Route::get('/speciality/{specialityId}', [DoctorController::class, 'bySpeciality']);
+    Route::get('/{id}', [DoctorController::class, 'show']);
+});
+
+Route::get('offers', [OfferController::class, 'index']);
+
+Route::middleware('auth:client')->group(function () {
+    // Auth
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('change-password', [AuthController::class, 'changePassword']);
 
-    Route::get('specialities', [SpecialityController::class, 'index']);
-
-    Route::get('/doctors/search', [DoctorController::class, 'search']);
-    Route::get('/doctors/speciality/{specialityId}', [DoctorController::class, 'bySpeciality']);
-    Route::get('/doctors/{id}', [DoctorController::class, 'show']);
-    Route::get('/doctors', [DoctorController::class, 'index']);
-
+    // User Features
     Route::apiResource('favourites', FavouriteController::class);
     Route::apiResource('ratings', RatingController::class);
 
-    Route::get('offers', [OfferController::class, 'index']);
-
-    Route::apiResource('appointments', AppointmentController::class)
-        ->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::apiResource('appointments', AppointmentController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
 
-    // stripe
+    // Payments
     Route::post('/create-payment-intent', [StripeController::class, 'createPaymentIntent']);
     Route::post('/confirm-payment', [StripeController::class, 'confirmPayment']);
 });
+
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);

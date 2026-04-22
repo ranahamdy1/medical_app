@@ -30,6 +30,32 @@ class AuthController extends Controller
         );
     }
 
+    public function verifyRegister(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'code'  => 'required'
+        ]);
+
+        $result = $this->authService->verifyRegister($request->email, $request->code);
+
+        if (!$result['status']) {
+            return api_response(
+                'fail',
+                $result['message'],
+                null,
+                $result['code']
+            );
+        }
+
+        return api_response(
+            'success',
+            'Account verified successfully',
+            $result['data'],
+            200
+        );
+    }
+
     public function login(LoginRequest $request)
     {
         $result = $this->authService->login($request->validated());
