@@ -5,11 +5,13 @@ use App\Http\Controllers\Client\{AppointmentController,
     AuthController,
     DoctorController,
     FavouriteController,
+    HomeController,
     NotificationController,
     OfferController,
     PasswordResetController,
     ProfileController,
     RatingController,
+    SettingsController,
     SpecialityController,
     StripeController,
     StripeWebhookController};
@@ -50,6 +52,10 @@ Route::middleware('auth:client')->group(function () {
         Route::post('/change-email', [ProfileController::class, 'changeEmail']);
         Route::post('/change-phone', [ProfileController::class, 'changePhone']);
     });
+
+    Route::post('/settings/update-settings', [SettingsController::class, 'update']);
+
+    Route::get('/home', [HomeController::class, 'index']);
 
     // User Features
     Route::apiResource('favourites', FavouriteController::class);
