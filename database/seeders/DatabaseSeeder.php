@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             ClientSeeder::class,
             DoctorSeeder::class,
+            AppSettingSeeder::class,
         ]);
     }
 }

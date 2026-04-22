@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Client\{AppointmentController,
+use App\Http\Controllers\Client\{AboutController,
+    AppointmentController,
     AuthController,
     DoctorController,
     FavouriteController,
@@ -71,5 +72,6 @@ Route::middleware('auth:client')->group(function () {
 
 });
 
-
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+
+Route::get('/about', [AboutController::class, 'index']);
