@@ -32,3 +32,71 @@ Medical files management, booking and discounts within the application, and book
 
 - Doctor Favourite
 ![doctor_favourite](public/images/doctor_favourite.png)
+
+#### structure:
+
+``` 
+src/
+│
+├── modules/
+│   │
+│   ├── auth/
+│   │   ├── register/
+│   │   ├── verify/
+│   │   ├── login/
+│   │   ├── forgot-password/
+│   │   └── reset-password/
+│   │
+│   ├── profile/
+│   │   ├── show-profile/
+│   │   ├── update-profile/
+│   │   ├── change-email/
+│   │   └── change-phone/
+│   │
+│   ├── settings/
+│   │   └── update-settings/
+│   │
+│   ├── notifications/
+│   │   ├── list/
+│   │   ├── read/
+│   │   ├── delete/
+│   │   └── mark-all-read/
+│   │
+│   ├── home/
+│   │   ├── static-pages/
+│   │   └── core-features/
+│   │
+│   │
+│   ├── admin/
+│   │   ├── auth/
+│   │   │   └── login/
+│   │   │
+│   │   ├── profile/
+│   │   │   ├── view/
+│   │   │   └── update/
+│   │   │
+│   │   ├── settings/
+│   │   │   └── manage/
+│   │   │
+│   │   ├── locations/
+│   │   │   ├── countries/
+│   │   │   │   └── CRUD/
+│   │   │   └── cities/
+│   │   │       └── CRUD/
+│   │   │
+│   │   ├── notifications/
+│   │   │   ├── send-push/
+│   │   │   └── manage/
+│   │   │
+│   │   ├── static-pages/
+│   │   │   ├── create/
+│   │   │   └── update/
+│   │   │
+│   │   └── core-features/
+│   │       └── CRUD/
+│
+├── middlewares/
+├── utils/
+├── config/
+└── routes/
+```
